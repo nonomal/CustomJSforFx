@@ -598,10 +598,9 @@
         const sLabel = document.createElement("label");
         sLabel.className = "button-text";
         // translated settings label
-        document.l10n.formatValue(`urlbar-searchmode-popup-search-settings${appver < 154 ? "-panelitem" : ""}`)
-        .then(settingsText => {
-          sButton.title = settingsText;
-          sLabel.textContent = settingsText;
+        sLabel.setAttribute("data-l10n-id", "urlbar-searchmode-popup-search-settings");
+        document.l10n.translateFragment(sLabel).then(() => {
+          sButton.title = sLabel.textContent;
         });
         sBox.append(sImg, sLabel);
         sButton.appendChild(sBox);
