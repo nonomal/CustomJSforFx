@@ -561,7 +561,9 @@
           input.toggleAttribute("open", true);
         }
         // 'searchbarNew.view.onQueryFinished()' calls 'close()' when a query has no results,
-        // keep it open so the one-off buttons can be used with a unique query
+        // keep it open so the one-off buttons can be used with a unique query.
+        // Required with 'customHistoryAutocomplete', and fixed by Bug 2034013,
+        // so it can be removed when ESR153 reaches EOL
         const view = searchbarNew.view;
         if (view && !view._oneOffNoResultsHooked) {
           view._oneOffNoResultsHooked = true;
@@ -769,7 +771,6 @@
             #searchbar-new .urlbarView {
               overflow: hidden !important;
               overflow-y: hidden !important;
-              margin-right: 1px !important;
               width: auto !important;
               padding-right: 2px !important;
             }
@@ -788,6 +789,42 @@
               }
             }
           `;
+        }
+
+        // FF157 + Nova-Theme support
+        if (appver >= 157) {
+          css += `
+            #searchbar-new .urlbarView {
+              overflow: visible !important;
+              margin-right: var(--urlbarView-margin-inline) !important;
+              clip-path: none !important;
+            }
+            #searchbar-new .urlbarView-row {
+              margin-right: 5px !important;
+            }
+            #searchbar-new .urlbarView-results {
+              overflow-y: auto !important;
+              scrollbar-width: thin !important;
+              margin-right: -4px !important;
+              clip-path: inset(0 -1px 1px 0 round 0 0 10px 0) !important;
+
+              /* "@media" works only in US/AG, while "::part()" only in "AUTHOR_SHEET",
+                so keep this workaround until ESR153 reaches EOL */
+              ${Services.prefs.getBoolPref("browser.nova.enabled", false) ? `
+                clip-path: inset(0 0 0 0 round 0 0 16px 0) !important;
+              ` : ""}
+            }
+          `;
+          if (restore_oneoff_buttons) {
+            css += `
+              #searchbar-new .urlbarView {
+                padding-right: 0 !important;
+              }
+              #searchbar-new .urlbarView-results {
+                clip-path: none !important;
+              }
+            `;
+          }
         }
 
         if (go_button_always_visible) {

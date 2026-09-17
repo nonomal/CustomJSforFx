@@ -71,12 +71,14 @@
 		  bar.collapsed = !enabled;
 	    } catch(e) {}
 
+
+		const bgBox = document.createXULElement("vbox");
+		bgBox.id = "addonbar_v_bg";
+		bar.appendChild(bgBox);
+		
 		// Detect theme change and apply necessary classes for theme support + Apply vertical background
 		if (theme_support) {
-		  const bgBox = document.createXULElement("vbox");
 		  bar.classList.add("experimental");
-		  bgBox.id = "addonbar_v_bg";
-		  bar.appendChild(bgBox);
 		  const updateBackgroundClass = () => {
 			const cs = getComputedStyle(document.documentElement);
 			const hasHeader = cs.getPropertyValue("--lwt-header-image").trim();
@@ -254,117 +256,40 @@
 		  ? "#addonbar_v { border-inline-end: 1px solid var(--sidebar-border-color, rgba(0,0,0,0.1)) !important; }"
 		  : "#addonbar_v { border-inline-start: 1px solid var(--sidebar-border-color, rgba(0,0,0,0.1)) !important; }"
 		}
-	    #addonbar_v {
-	  	  appearance: none !important;
-	  	  background-color: var(--toolbar-background-color);
-	  	  background-image: var(--toolbar-bgimage);
-	  	  background-clip: padding-box;
-	  	  color: var(--toolbar-color, inherit);
-	    }
-
-	    #main-window[chromehidden="menubar toolbar location directories status extrachrome "] #addonbar_v:not([collapsed="true"]),
-	    #main-window[sizemode="fullscreen"] #addonbar_v:not([collapsed="true"]) {
-	  	  min-width: 0px;
-	  	  width: 0px;
-	  	  max-width: 0px;
-	    }
-	    #addonbar_v toolbarbutton,
-	    #addonbar_v toolbar .toolbarbutton-1 {
-	  	  padding: 0 !important;
-	    }
-	    #unified-extensions-button[hidden] {
-	  	  visibility: visible !important;
-	  	  display: flex !important;
-	    }
-	    #addonbar_v toolbaritem separator {
-	  	  display: none !important;
-	    }
-		#main-window #addonbar_v > toolbarpaletteitem > toolbaritem,
-	    #main-window #addonbar_v > toolbaritem {
-	  	  writing-mode: vertical-rl !important;
-	  	  text-orientation: mixed !important;
-	  	  transform: rotate(0deg) !important;
-	    }
-	    #main-window #addonbar_v > toolbaritem menupopup {
-	  	  max-height: 170px !important;
-	  	  max-width: 170px !important;
-	  	  transform: rotate(-90deg) !important;
-	    }
-	    #main-window #addonbar_v > toolbaritem .toolbarbutton-badge {
-	  	  transform: rotate(-90deg) !important;
-	  	  position: absolute !important;
-	  	  padding: 1px 2px !important;
-	  	  top: -4px !important;
-	    }
-	    #main-window #addonbar_v #search-container,
-	    #main-window #addonbar_v #wrapper-search-container {
-	  	  flex: unset !important;
-	    }
-	    #main-window #addonbar_v #search-container {
-	  	  min-width: unset !important;
-	  	  width: unset !important;
-	  	  height: 100px !important;
-
-	  	  &[width] {
-	  	    flex: unset !important;
-	  	  }
-	    }
-		#main-window[customizing] #addonbar_v > #wrapper-zoom-controls {
-		  height: 96px !important; /* 32px per button */
-		}
-	    #main-window #addonbar_v #zoom-reset-button > .toolbarbutton-text {
-	  	  min-width: unset !important;
-	  	  min-height: unset !important;
-		  writing-mode: horizontal-tb !important;
-		  padding-bottom: calc(var(--toolbarbutton-inner-padding, var(--toolbarbutton-padding-inner)) - 1px) !important;
-		  padding-left:   calc(var(--toolbarbutton-inner-padding, var(--toolbarbutton-padding-inner)) - 6px) !important;
-		  padding-right:  calc(var(--toolbarbutton-inner-padding, var(--toolbarbutton-padding-inner)) - 6px) !important;
-	    }
-		#main-window #addonbar_v > #zoom-controls{
-		  margin: 2px 0px 2px 0px !important;
-		}
-	    #main-window #addonbar_v #zoom-reset-button:not([label]) {
-	  	  display: none !important;
-	    }
-	    #main-window #addonbar_v .toolbarbutton-combined-buttons-dropmarker > .toolbarbutton-icon {
-	  	  width: unset !important;
-	  	  height: 16px !important;
-	    }
-		#main-window #addonbar_v:not([collapsed="true"], .header, .additional) {
-		  &::before, &::after {
-			content: "";
-			width: ${addonbar_v_width};
-			height: 1px;
-			/*background: var(--lwt-header-image, var(--lwt-additional-images), rgb(from var(--toolbar-background-color) r g b / 1)) !important;*/
-			background: rgb(from var(--toolbar-background-color) r g b / 1);
-			position: absolute;
-			opacity: 1;
-		  }
-		  &::before { top: -1px; }
-		  &::after  { bottom: -1px;}
-		}
-		#addonbar_v.experimental {
+		#addonbar_v {
+		  appearance: none !important;
+		  position: relative !important;
 		  overflow: hidden !important;
-		  z-index: 0 !important;
+		  background-color: var(--toolbox-background-color);
+		  background-image: var(--toolbar-bgimage);
+		  background-clip: padding-box;
+		  color: var(--toolbar-color, inherit);
 		}
-		#addonbar_v.experimental > *:not(#addonbar_v_bg) {
+
+		#addonbar_v_bg {
+		  position: relative !important;
+          margin-top: auto !important;
+		  z-index: 0 !important;
+		  pointer-events: none !important;
+		}
+
+		#addonbar_v > *:not(#addonbar_v_bg) {
+		  position: relative !important;
 		  z-index: 1 !important;
 		}
-		#addonbar_v.experimental #addonbar_v_bg {
-		  position: relative !important;
-		  margin-top: auto !important;
-		  z-index: -1 !important;
+
+		#addonbar_v.experimental {
+		  z-index: 2 !important;
 		}
 		/* rotate the background image in a vertical toolbar */
-		#addonbar_v.experimental #addonbar_v_bg::before {
-		  content: "" ;
+		#addonbar_v_bg::before {
+		  content: "";
 		  position: absolute;
 		  top: 0;
 		  left: 0;
 		  /* the horizontal length becomes the vertical span once rotated */
-		  width: 3000px !important;
+		  width: 100vh !important;
 		  height: ${addonbar_v_width} !important;
-		  background: var(--lwt-header-image, var(--lwt-additional-images), rgb(from var(--toolbar-background-color) r g b / 1)) !important;
 		  background-repeat: no-repeat !important;
 		  background-position: right top !important;
 		  background-size: cover !important;
@@ -373,15 +298,108 @@
 		  z-index: 0 !important;
 		  display: block !important;
 		}
-		/*#main-window[customizing] #addonbar_v.experimental #addonbar_v_bg::before {
-		  display: none !important;
-		}*/
+
+		#addonbar_v.experimental #addonbar_v_bg::before {
+		  background-image: var(--lwt-header-image, var(--lwt-additional-images, none)) !important;
+		  background-color: rgb(from var(--toolbox-background-color) r g b / 1) !important;
+		}
+
 		#addonbar_v.experimental.header #addonbar_v_bg::before {
 		  background-size: auto !important;
 		}
 		#addonbar_v.experimental.additional #addonbar_v_bg::before {
 		  background-size: auto, cover !important;
 		  background-repeat: var(--lwt-background-tiling), no-repeat !important;
+		}
+
+        /* nova theme */
+		#main-window[theme-effective-id^="firefox-compact-"][theme-effective-id$="@mozilla.org"] #addonbar_v_bg::before,
+		#main-window[theme-effective-id="default-theme@mozilla.org"] #addonbar_v_bg::before {
+		  background-image: var(--toolbox-background-image) !important;
+
+		  @media not -moz-pref("browser.nova.enabled") {
+			background-color: rgb(from var(--toolbar-background-color) r g b / 1) !important;
+		  }
+		}
+		/* nova-sun inactive window */
+		@media -moz-pref("browser.nova.enabled") {
+		  #main-window[theme-effective-id="nova-sun@mozilla.org"]:-moz-window-inactive #addonbar_v.experimental #addonbar_v_bg::before {
+			background-color: var(--lwt-accent-color-inactive) !important;
+		  }
+		}
+
+		#main-window[chromehidden="menubar toolbar location directories status extrachrome "] #addonbar_v:not([collapsed="true"]),
+		#main-window[sizemode="fullscreen"] #addonbar_v:not([collapsed="true"]) {
+		  min-width: 0px;
+		  width: 0px;
+		  max-width: 0px;
+		}
+		#addonbar_v toolbarbutton,
+		#addonbar_v toolbar .toolbarbutton-1 {
+		  padding: 0 !important;
+		}
+		#unified-extensions-button[hidden] {
+		  visibility: visible !important;
+		  display: flex !important;
+		}
+		#addonbar_v toolbaritem separator {
+		  display: none !important;
+		}
+		#main-window #addonbar_v > toolbarpaletteitem > toolbaritem,
+		#main-window #addonbar_v > toolbaritem {
+		  writing-mode: vertical-rl !important;
+		  text-orientation: mixed !important;
+		  transform: rotate(0deg) !important;
+		}
+		#main-window #addonbar_v > toolbaritem menupopup {
+		  max-height: 170px !important;
+		  max-width: 170px !important;
+		  transform: rotate(-90deg) !important;
+		}
+		#main-window #addonbar_v > toolbaritem .toolbarbutton-badge {
+		  transform: rotate(-90deg) !important;
+		  position: absolute !important;
+		  padding: 1px 2px !important;
+		  top: -4px !important;
+		}
+		#main-window #addonbar_v #search-container,
+		#main-window #addonbar_v #wrapper-search-container {
+		  flex: unset !important;
+		}
+		#main-window #addonbar_v #search-container {
+		  min-width: unset !important;
+		  width: unset !important;
+		  height: 100px !important;
+
+		  &[width] {
+			flex: unset !important;
+		  }
+		}
+		#main-window[customizing] #addonbar_v > #wrapper-zoom-controls {
+		  height: 96px !important; /* 32px per button */
+		}
+		#main-window #addonbar_v #zoom-reset-button > .toolbarbutton-text {
+		  min-width: unset !important;
+		  min-height: unset !important;
+		  writing-mode: horizontal-tb !important;
+		  padding-bottom: calc(var(--toolbarbutton-inner-padding, var(--toolbarbutton-padding-inner)) - 1px) !important;
+		  padding-left:   calc(var(--toolbarbutton-inner-padding, var(--toolbarbutton-padding-inner)) - 6px) !important;
+		  padding-right:  calc(var(--toolbarbutton-inner-padding, var(--toolbarbutton-padding-inner)) - 6px) !important;
+		}
+		#main-window #addonbar_v > #zoom-controls {
+		  margin: 2px 0px 2px 0px !important;
+		}
+		#main-window #addonbar_v #zoom-reset-button:not([label]) {
+		  display: none !important;
+		}
+		#main-window #addonbar_v .toolbarbutton-combined-buttons-dropmarker > .toolbarbutton-icon {
+		  width: unset !important;
+		  height: 16px !important;
+		}
+		#main-window #addonbar_v:not([collapsed="true"], .header, .additional) {
+		  box-shadow:
+			0 -1px 0 rgb(from var(--toolbar-background-color) r g b / 1),
+			0 1px 0 rgb(from var(--toolbar-background-color) r g b / 1);
 		}
 	  `;
 	}

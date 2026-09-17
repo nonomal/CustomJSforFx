@@ -142,18 +142,26 @@
 		outline: 1px dashed !important;
 		outline-offset: -2px !important;
 	  }
-      /* fix border top being cut */
-      #tabbrowser-tabbox{
-          margin-bottom: 0.01px !important;
-      }
+	  /* fix border top being cut */
+	  #tabbrowser-tabbox{
+		  margin-bottom: 0.01px !important;
+	  }
 	  #addonbar {
 		border-top: 0.01px solid var(--sidebar-border-color, var(--chrome-content-separator-color)) !important;
 		background-color: var(--toolbar-background-color);
 		background-image: var(--toolbar-bgimage);
 		-moz-window-dragging: no-drag !important;
 	  }
-	  :root[lwtheme] #addonbar:not(.experimental) {
-		background: var(--lwt-accent-color) !important;
+	  #addonbar.experimental {
+	  	@media -moz-pref("browser.nova.enabled") {
+			background: var(--lwt-accent-color) !important;
+	  		/* Nova theme */
+	  		#main-window[theme-effective-id="default-theme@mozilla.org"] &,
+	  		#main-window[theme-effective-id^="nova-"][theme-effective-id$="@mozilla.org"] &,
+	  		#main-window[theme-effective-id^="firefox-compact-"][theme-effective-id$="@mozilla.org"] & {
+	  			background: var(--toolbox-background-image) !important;
+	  		}
+	  	}
 	  }
 	  :root[lwtheme][lwtheme-image="true"] #addonbar:not(.experimental) {
 		background: var(--lwt-header-image) !important;
@@ -162,7 +170,7 @@
 	  :root[lwtheme] #addonbar.experimental,
 	  :root[lwtheme][lwtheme-image="true"] #addonbar.experimental {
 		background-image: var(--lwt-header-image, none), var(--lwt-additional-images) !important;
-		background-color: rgb(from var(--toolbar-background-color) r g b / 1) !important;
+		background-color: rgb(from var(--toolbox-background-color) r g b / 1) !important;
 		background-repeat: no-repeat, var(--lwt-background-tiling) !important;
 		background-position: right top, var(--lwt-background-alignment) !important;
 	  }
@@ -186,7 +194,7 @@
 			background: var(--lwt-accent-color, rgb(from var(--toolbar-background-color) r g b / 1)) !important;
 			color: var(--lwt-text-color) !important;
 			border: none !important;
-            color-scheme: unset !important;
+			color-scheme: unset !important;
 		  }
 		  &[mirror] {
 			opacity: 0 !important;
@@ -205,44 +213,44 @@
 		/* Normalize buttons */
 		toolbarbutton {
 		  padding: 0 2px !important;
-          max-height: 28px !important;
-          overflow: hidden !important;
-          &:has(.toolbarbutton-badge) {
-            overflow: visible !important;
-          }
-          > .toolbarbutton-icon,
-            .toolbarbutton-badge-stack{
-            max-width: 28px !important;
-            max-height: 32px !important;
-            padding: 8px 6px !important;
+		  max-height: 28px !important;
+		  overflow: hidden !important;
+		  &:has(.toolbarbutton-badge) {
+			overflow: visible !important;
+		  }
+		  > .toolbarbutton-icon,
+			.toolbarbutton-badge-stack{
+			max-width: 28px !important;
+			max-height: 32px !important;
+			padding: 8px 6px !important;
 
-            :root[uidensity="compact"] & {
-              padding: 6px 6px !important;
-            }
-          }
+			:root[uidensity="compact"] & {
+			  padding: 6px 6px !important;
+			}
+		  }
 		}
 		> toolbaritem {
 		  margin: 0 !important;
 		  padding: 0 !important;
 		}
-        /* Customise mode */
-        > toolbarpaletteitem > .toolbaritem-combined-buttons {
-          margin: 0 !important;
-        }
-        & toolbarseparator {
-          padding: 2px 0 !important;
-        }
+		/* Customise mode */
+		> toolbarpaletteitem > .toolbaritem-combined-buttons {
+		  margin: 0 !important;
+		}
+		& toolbarseparator {
+		  padding: 2px 0 !important;
+		}
 		/* First button alignment */  
 		> toolbarbutton:not(#statuspanel):first-child,
 		> #statuspanel + toolbarbutton,
 		> toolbaritem.unified-extensions-item:first-child toolbarbutton,
 		> #statuspanel + toolbaritem.unified-extensions-item toolbarbutton,
-        /* customise mode */
-        > toolbarpaletteitem:first-child > toolbarbutton,
-        > #statuspanel + toolbarpaletteitem > toolbarbutton,
-        > toolbarpaletteitem:first-child > toolbaritem.unified-extensions-item,
-        > #statuspanel + toolbarpaletteitem > toolbaritem.unified-extensions-item {
-          margin-left: ${compact_buttons ? "3px" : "-1px"} !important;
+		/* customise mode */
+		> toolbarpaletteitem:first-child > toolbarbutton,
+		> #statuspanel + toolbarpaletteitem > toolbarbutton,
+		> toolbarpaletteitem:first-child > toolbaritem.unified-extensions-item,
+		> #statuspanel + toolbarpaletteitem > toolbaritem.unified-extensions-item {
+		  margin-left: ${compact_buttons ? "3px" : "-1px"} !important;
 		}
 	  }
 	`;
