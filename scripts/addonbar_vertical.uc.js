@@ -169,8 +169,6 @@
 			? browser.insertBefore(bar, browser.firstChild)
 			: browser.appendChild(bar);
 		  bar.collapsed = !prefs.getBoolPref("enabled", true);
-		  const bg = document.getElementById("addonbar_v_bg");
-		  if (bg) bar.appendChild(bg); // Make sure bg is always at the very end
 		});
 	  }
 	  // Ignore download-button's autohide `browser.download.autohideButton` preference
@@ -267,8 +265,9 @@
 		}
 
 		#addonbar_v_bg {
-		  position: relative !important;
-          margin-top: auto !important;
+		  position: absolute !important;
+          bottom: 0 !important;
+          left: 0 !important;
 		  z-index: 0 !important;
 		  pointer-events: none !important;
 		}
@@ -562,8 +561,6 @@
 	  // when addonbar_v is empty
 	  if (!target) {
 		CustomizableUI.addWidgetToArea(id, "addonbar_v", 0);
-		const bg = document.getElementById("addonbar_v_bg");
-		if (bg) bar.appendChild(bg); // keep bg at the end
 		finishDrag();
 		suppressNativeAction(event);
 		return;
@@ -590,8 +587,6 @@
 		CustomizableUI.addWidgetToArea(id, "addonbar_v", position);
 	  }
 
-	  const bg = document.getElementById("addonbar_v_bg");
-	  if (bg) bar.appendChild(bg); // keep bg at the end
 	  finishDrag();
 	  suppressNativeAction(event);
 	}
